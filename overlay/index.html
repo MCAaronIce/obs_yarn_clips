@@ -1,0 +1,21 @@
+<html>
+<body>
+
+<h1>OBS clips</h1>
+
+<form action="/setClips" method="post" id="clipsOptionsForm">
+    <label for="phrase">Phrase:</label>
+    <input type="text" id="phrase" name="phrase"><br><br>
+    <label for="clAmount">Numer of clips:</label>
+    <input type="text" id="clAmount" name="clAmount"><br><br>
+    <label for="time">Clip duration:</label>
+    <input type="text" id="time" name="time"><br><br>
+    <input type="submit" value="One random" formaction="/randomOne">
+    <input type="submit" value="Top result" formaction="/topResult">
+    <input type="submit" value="Random" formaction="/randomClips">
+    <input type="submit" value="Loop" formaction="/loop">
+    <input type="submit" value="Stop" formaction="/stop">
+</form>
+
+</body>
+</html>
