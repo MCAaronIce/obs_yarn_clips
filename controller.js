@@ -22,7 +22,7 @@ class Controller {
         }))
         this.loaded = this.loaded.bind(this);
         this.app.use(express.static('overlay'));
-        this.app.use('/overlay', express.static('overlay'));
+        this.app.use('/panel', express.static('panel'));
         this.app.use('/randomOne', (req, res) => this.randomOne(req, res))
         this.app.use('/topResult', (req, res) => this.topOne(req, res))
         this.app.use('/randomClips', (req, res) => this.randomClips(req, res))

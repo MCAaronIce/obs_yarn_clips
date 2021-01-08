@@ -1,0 +1,33 @@
+{
+  "name": "obs-clips",
+  "version": "1.0.0",
+  "description": "Show clips from getyarn.io in OBS",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ventus34/obs_yarn_clips.git"
+  },
+  "keywords": [
+    "obs",
+    "yarn",
+    "overlay",
+    "clips"
+  ],
+  "author": "ventus34",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.5",
+    "events": "^3.2.0",
+    "express": "^4.17.1",
+    "http": "0.0.1-security",
+    "socket.io": "^2.4.1"
+  },
+  "bugs": {
+    "url": "https://github.com/ventus34/obs_yarn_clips/issues"
+  },
+  "homepage": "https://github.com/ventus34/obs_yarn_clips#readme"
+}
