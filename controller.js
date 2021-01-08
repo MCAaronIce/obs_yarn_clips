@@ -13,7 +13,7 @@ class Controller {
     _semaphore
 
     constructor() {
-        this.port = 8888;
+        this.port = process.env.PORT || 8888;
         this.app = express();
         this.server = http.createServer(this.app);
         this.io = socketio(this.server);
