@@ -10,10 +10,9 @@ class Controller {
     _io
     _events
     _socket
-    _semaphore
 
     constructor() {
-        this.port = process.env.PORT || 8888;
+        this.port = process.env.PORT || 8000;
         this.app = express();
         this.server = http.createServer(this.app);
         this.io = socketio(this.server);
@@ -21,6 +20,7 @@ class Controller {
             extended: true
         }))
         this.loaded = this.loaded.bind(this);
+        this.nextClip = this.nextClip.bind(this);
         this.app.use(express.static('overlay'));
         this.app.use('/panel', express.static('panel'));
         this.app.use('/randomOne', (req, res) => this.randomOne(req, res))
@@ -29,12 +29,12 @@ class Controller {
         this.app.use('/loop', (req, res) => this.loop(req, res))
         this.app.use('/stop', (req, res) => this.stop(req, res))
         this.events = new EventEmitter();
-        this.setWebsocketEvents(this.loaded);
+        this.setWebsocketEvents(this.loaded, this.nextClip);
         this.server.listen(this.port, () => console.log(`Listening on port ${this.port}`));
     }
 
 
-    setWebsocketEvents(loadedHandler) {
+    setWebsocketEvents(loadedHandler, nextClipHandler) {
         this.io.on('connect', socket => {
             this.events.on('changeClip', value => {
                 socket.emit('changeClip', value)
@@ -51,23 +51,11 @@ class Controller {
             socket.on('loaded', function () {
                 loadedHandler();
             });
+            socket.on('nextClip', function () {
+                nextClipHandler();
+            });
         });
     }
-
-    fillValues(req) {
-        let config = req.body;
-        if (config.phrase == null) {
-            config.phrase = ""
-        }
-        if (config.clAmount == null) {
-            config.phrase = "3"
-        }
-        if (config.time == null) {
-            config.phrase = "4"
-        }
-        return config;
-    }
-
 
     changeClip(embed) {
         this._events.emit('changeClip', embed);
@@ -75,6 +63,10 @@ class Controller {
 
     loaded() {
         this._events.emit('clientLoaded');
+    }
+
+    nextClip() {
+        this._events.emit('nextClip');
     }
 
     showPlayer() {
@@ -86,22 +78,22 @@ class Controller {
     }
 
     randomOne(req, res) {
-        this._events.emit('randomOne', this.fillValues(req))
+        this._events.emit('randomOne', req.body)
         res.status(204).send();
     }
 
     topOne(req, res) {
-        this._events.emit('topOne', this.fillValues(req))
+        this._events.emit('topOne', req.body)
         res.status(204).send();
     }
 
     randomClips(req, res) {
-        this._events.emit('randomClips', this.fillValues(req))
+        this._events.emit('randomClips', req.body)
         res.status(204).send();
     }
 
     loop(req, res) {
-        this._events.emit('loop', this.fillValues(req))
+        this._events.emit('loop', req.body)
         res.status(204).send();
     }
 
@@ -159,14 +151,6 @@ class Controller {
         this._socket = value;
     }
 
-
-    get semaphore() {
-        return this._semaphore;
-    }
-
-    set semaphore(value) {
-        this._semaphore = value;
-    }
 }
 
 module.exports = new Controller();

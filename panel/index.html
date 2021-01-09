@@ -10,6 +10,11 @@
     <input type="text" id="clAmount" name="clAmount"><br><br>
     <label for="time">Clip duration:</label>
     <input type="text" id="time" name="time"><br><br>
+    <input type="radio" id="maxloops" name="timerType" value="loops" checked>
+    <label for="maxloops">Number of loops</label>
+    <input type="radio" id="maxtime" name="timerType" value="time">
+    <label for="maxloops">Loop time in seconds</label>
+    <br><br>
     <input type="submit" value="One random" formaction="/randomOne">
     <input type="submit" value="Top result" formaction="/topResult">
     <input type="submit" value="Random" formaction="/randomClips">
