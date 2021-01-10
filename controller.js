@@ -28,6 +28,7 @@ class Controller {
         this.app.use('/randomClips', (req, res) => this.randomClips(req, res))
         this.app.use('/loop', (req, res) => this.loop(req, res))
         this.app.use('/stop', (req, res) => this.stop(req, res))
+        this.app.use('/stretch', (req, res) => this.stretch(req, res))
         this.events = new EventEmitter();
         this.setWebsocketEvents(this.loaded, this.nextClip);
         this.server.listen(this.port, () => console.log(`Listening on port ${this.port}`));
@@ -47,6 +48,9 @@ class Controller {
             });
             this.events.on('stop', function () {
                 socket.emit('stop')
+            });
+            this.events.on('stretch', function () {
+                socket.emit('stretch')
             });
             socket.on('loaded', function () {
                 loadedHandler();
@@ -78,27 +82,32 @@ class Controller {
     }
 
     randomOne(req, res) {
-        this._events.emit('randomOne', req.body)
+        this._events.emit('randomOne', req.body);
         res.status(204).send();
     }
 
     topOne(req, res) {
-        this._events.emit('topOne', req.body)
+        this._events.emit('topOne', req.body);
         res.status(204).send();
     }
 
     randomClips(req, res) {
-        this._events.emit('randomClips', req.body)
+        this._events.emit('randomClips', req.body);
         res.status(204).send();
     }
 
     loop(req, res) {
-        this._events.emit('loop', req.body)
+        this._events.emit('loop', req.body);
         res.status(204).send();
     }
 
     stop(req, res) {
-        this._events.emit('stop', req.body)
+        this._events.emit('stop', req.body);
+        res.status(204).send();
+    }
+
+    stretch(req, res) {
+        this._events.emit('stretch');
         res.status(204).send();
     }
 

@@ -71,12 +71,21 @@
     }
 
     socket.on('stop', function () {
+        $('#video').hide();
         video.pause();
     });
 
     socket.on('hide', function () {
         $('#video').hide();
         video.pause();
+    });
+
+    socket.on('stretch', function () {
+        if($('#video').css('object-fit')==='fill'){
+            $('#video').css('object-fit','')
+        } else {
+            $('#video').css('object-fit','fill')
+        }
     });
 
 </script>

@@ -20,7 +20,18 @@
     <input type="submit" value="Random" formaction="/randomClips">
     <input type="submit" value="Loop" formaction="/loop">
     <input type="submit" value="Stop" formaction="/stop">
+    <br><br>
+    <input type="submit" value="Turn off video stretch" onclick="return stretchButtonLabel(this);" formaction="/stretch">
 </form>
 
 </body>
 </html>
+
+<script type="text/javascript">
+    function stretchButtonLabel(button) {
+        if (button.value === "Turn on video stretch")
+            button.value = "Turn off video stretch";
+        else
+            button.value = "Turn on video stretch";
+    }
+</script>
