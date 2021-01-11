@@ -5,24 +5,48 @@
 
 <form action="/setClips" method="post" id="clipsOptionsForm">
     <label for="phrase">Phrase:</label>
-    <input type="text" id="phrase" name="phrase"><br><br>
+    <input class="buttons" type="text" id="phrase" name="phrase"><br><br>
     <label for="clAmount">Numer of clips:</label>
-    <input type="text" id="clAmount" name="clAmount"><br><br>
+    <input class="buttons" type="text" id="clAmount" name="clAmount"><br><br>
     <label for="time">Clip duration:</label>
-    <input type="text" id="time" name="time"><br><br>
-    <input type="radio" id="maxloops" name="timerType" value="loops" checked>
+    <input class="buttons" type="text" id="time" name="time"><br><br>
+    <input class="buttons" type="radio" id="maxloops" name="timerType" value="loops" checked>
     <label for="maxloops">Number of loops</label>
-    <input type="radio" id="maxtime" name="timerType" value="time">
+    <input class="buttons" type="radio" id="maxtime" name="timerType" value="time">
     <label for="maxloops">Loop time in seconds</label>
     <br><br>
-    <input type="submit" value="One random" formaction="/randomOne">
-    <input type="submit" value="Top result" formaction="/topResult">
-    <input type="submit" value="Random" formaction="/randomClips">
-    <input type="submit" value="Loop" formaction="/loop">
-    <input type="submit" value="Stop" formaction="/stop">
+    <input class="buttons" type="submit" value="One random" formaction="/randomOne">
+    <input class="buttons" type="submit" value="Top result" formaction="/topResult">
+    <input class="buttons" type="submit" value="Random" formaction="/randomClips">
+    <input class="buttons" type="submit" value="Loop" formaction="/loop">
+    <input class="buttons" type="submit" value="Stop" formaction="/stop">
     <br><br>
-    <input type="submit" value="Toggle video stretch" formaction="/stretch">
+    <input class="buttons" type="submit" value="Toggle video stretch" formaction="/stretch">
+    <button class="buttons" type="button" onclick="darkMode()">Toggle dark mode</button>
 </form>
 
 </body>
 </html>
+
+<style>
+    body {
+        background-color: white;
+        color: black;
+    }
+    .buttons {
+        background-color: #676767;
+        color: #e7e7e7;
+    }
+
+    .dark {
+        background-color: black;
+        color: darkgray;
+    }
+</style>
+
+<script type="text/javascript">
+    function darkMode(){
+        let element = document.body;
+        element.classList.toggle("dark");
+    }
+</script>

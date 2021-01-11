@@ -1,6 +1,6 @@
 {
   "name": "obs-clips",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Show clips from getyarn.io in OBS",
   "main": "app.js",
   "scripts": {
