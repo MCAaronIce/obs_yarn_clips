@@ -37,8 +37,11 @@ class Controller {
 
     setWebsocketEvents(loadedHandler, nextClipHandler) {
         this.io.on('connect', socket => {
-            this.events.on('changeClip', value => {
-                socket.emit('changeClip', value)
+            this.events.on('changeClip', clip => {
+                socket.emit('changeClip', clip)
+            });
+            this.events.on('prefetch', clips => {
+                socket.emit('prefetch', clips)
             });
             this.events.on('hide', function () {
                 socket.emit('hide')
@@ -61,8 +64,12 @@ class Controller {
         });
     }
 
-    changeClip(embed) {
-        this._events.emit('changeClip', embed);
+    changeClip(clip) {
+        this._events.emit('changeClip', clip);
+    }
+
+    prefetch(clips) {
+        this._events.emit('prefetch', clips);
     }
 
     loaded() {
