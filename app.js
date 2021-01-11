@@ -17,6 +17,8 @@ obsEmbedClip.events.on('randomClips', async value => {
     let currentCounter = ++counter;
     let clips = await yarnScrapper.scrapClips(value.phrase, Math.floor(value.clAmount / clipsOnOnePage) + 2);
     shuffle(clips);
+    clips = clips.slice(0, value.clAmount);
+    prefetchClips(clips);
     for (let i = 0; i < config.clAmount; i++) {
         if (stopLoop(counter, currentCounter)) return;
         let clip = clips.pop()
@@ -54,8 +56,10 @@ obsEmbedClip.events.on('loop', async value => {
     let config = processRequest(value);
     let currentCounter = ++counter;
     let clips = await yarnScrapper.scrapClips(value.phrase, Math.floor(config.clAmount / clipsOnOnePage) + 1);
+    clips = clips.slice(0, value.clAmount);
+    prefetchClips(clips);
     while (true) {
-        for (let i = 0; i < config.clAmount; i++) {
+        for (let i = config.clAmount-1; i >= 0; i--) {
             if (stopLoop(counter, currentCounter)) return;
             let clip = clips[i];
             if(!await playerEventHandler(config, clip, currentCounter)) {
@@ -178,6 +182,18 @@ function prepareClip(request, clip) {
         src: 'https://y.yarn.co/' + clip + '.mp4',
         poster: 'https://y.yarn.co/' + clip + '_screenshot.jpg'
     }
+}
+
+function getClipSource(clipId){
+    return 'https://y.yarn.co/' + clipId + '.mp4';
+}
+
+function prefetchClips(clipsIds){
+    let clips=[];
+    clipsIds.forEach(function(clip){
+        clips.push(getClipSource(clip.replace('/yarn-clip/', '')))
+    })
+    obsEmbedClip.prefetch(clips);
 }
 
 function sleep(ms) {
