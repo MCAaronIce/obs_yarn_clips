@@ -15,7 +15,7 @@ obsEmbedClip.events.on('randomClips', async value => {
     stopRunningClips();
     let config = processRequest(value);
     let currentCounter = ++counter;
-    let clips = await yarnScrapper.scrapClips(value.phrase, Math.floor(value.clAmount / clipsOnOnePage) + 2);
+    let clips = await yarnScrapper.scrapClips(value.phrase, value.type, Math.floor(value.clAmount / clipsOnOnePage) + 2);
     shuffle(clips);
     clips = clips.slice(0, value.clAmount);
     prefetchClips(clips);
@@ -34,7 +34,7 @@ obsEmbedClip.events.on('randomOne', async value => {
     stopRunningClips();
     let config = processRequest(value);
     let currentCounter = ++counter;
-    let clips = await yarnScrapper.scrapClips(config.phrase, 1);
+    let clips = await yarnScrapper.scrapClips(config.phrase, config.type, 1);
     shuffle(clips);
     let clip = clips.pop()
     await playerEventHandler(config, clip, currentCounter);
@@ -45,7 +45,7 @@ obsEmbedClip.events.on('topOne', async value => {
     stopRunningClips();
     let config = processRequest(value);
     let currentCounter = ++counter;
-    let clips = await yarnScrapper.scrapClips(config.phrase, 1);
+    let clips = await yarnScrapper.scrapClips(config.phrase, config.type, 1);
     let clip = clips[0];
     await playerEventHandler(config, clip, currentCounter);
     obsEmbedClip.hidePlayer();
@@ -55,7 +55,7 @@ obsEmbedClip.events.on('loop', async value => {
     stopRunningClips();
     let config = processRequest(value);
     let currentCounter = ++counter;
-    let clips = await yarnScrapper.scrapClips(value.phrase, Math.floor(config.clAmount / clipsOnOnePage) + 1);
+    let clips = await yarnScrapper.scrapClips(value.phrase, value.type, Math.floor(config.clAmount / clipsOnOnePage) + 1);
     clips = clips.slice(0, value.clAmount);
     prefetchClips(clips);
     while (true) {
@@ -165,6 +165,9 @@ function processRequest(request) {
     if (config.phrase == null) {
         config.phrase = ""
     }
+    if (config.type == null){
+        config.type = "all"
+    }
     if (config.clAmount == null) {
         config.clAmount = "1"
     }
@@ -179,6 +182,7 @@ function prepareClip(request, clip) {
     return {
         timerType: request.timerType,
         time: request.time,
+        type: request.type,
         src: 'https://y.yarn.co/' + clip + '.mp4',
         poster: 'https://y.yarn.co/' + clip + '_screenshot.jpg'
     }
