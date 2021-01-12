@@ -84,7 +84,11 @@ obsEmbedClip.events.on('stop', function () {
 })
 
 async function playerEventHandler(config, clip, currentCounter) {
-    obsEmbedClip.changeClip(prepareClip(config, clip));
+    if(clip===undefined) {
+        stopRunningClips()
+    } else {
+        obsEmbedClip.changeClip(prepareClip(config, clip));
+    }
     if(!await waitForStatusChange(currentCounter, config)) return false;
     return await waitUntilNextClipIsNeeded(config);
 
