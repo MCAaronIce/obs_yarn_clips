@@ -32,7 +32,7 @@ function getUrl(phrase, type, page){
     let urlBase = 'https://getyarn.io/yarn-find?'
     let phraseEncoded = 'text=' + encodeURI(phrase)
     let typeEncoded;
-    if(type!=null || type!=='all') {
+    if(type!=null && type!='all') {
         typeEncoded = '&type=' + type;
     } else {
         typeEncoded = '';

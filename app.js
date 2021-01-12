@@ -61,6 +61,10 @@ obsEmbedClip.events.on('loop', async value => {
     while (true) {
         for (let i = config.clAmount-1; i >= 0; i--) {
             if (stopLoop(counter, currentCounter)) return;
+            if (clips.length<i) {
+                stopRunningClips();
+                return;
+            }
             let clip = clips[i];
             if(!await playerEventHandler(config, clip, currentCounter)) {
                 obsEmbedClip.hidePlayer();
