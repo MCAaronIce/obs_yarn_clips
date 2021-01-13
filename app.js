@@ -15,9 +15,9 @@ obsEmbedClip.events.on('randomClips', async value => {
     stopRunningClips();
     let config = processRequest(value);
     let currentCounter = ++counter;
-    let clips = await yarnScrapper.scrapClips(value.phrase, value.type, Math.floor(value.clAmount / clipsOnOnePage) + 2);
+    let clips = await yarnScrapper.scrapClips(config, Math.floor(config.clAmount / clipsOnOnePage) + 2);
     shuffle(clips);
-    clips = clips.slice(0, value.clAmount);
+    clips = clips.slice(0, config.clAmount);
     prefetchClips(clips);
     for (let i = 0; i < config.clAmount; i++) {
         if (stopLoop(counter, currentCounter)) return;
@@ -34,7 +34,7 @@ obsEmbedClip.events.on('randomOne', async value => {
     stopRunningClips();
     let config = processRequest(value);
     let currentCounter = ++counter;
-    let clips = await yarnScrapper.scrapClips(config.phrase, config.type, 1);
+    let clips = await yarnScrapper.scrapClips(config, 1);
     shuffle(clips);
     let clip = clips.pop()
     await playerEventHandler(config, clip, currentCounter);
@@ -45,7 +45,7 @@ obsEmbedClip.events.on('topOne', async value => {
     stopRunningClips();
     let config = processRequest(value);
     let currentCounter = ++counter;
-    let clips = await yarnScrapper.scrapClips(config.phrase, config.type, 1);
+    let clips = await yarnScrapper.scrapClips(config, 1);
     let clip = clips[0];
     await playerEventHandler(config, clip, currentCounter);
     obsEmbedClip.hidePlayer();
@@ -55,7 +55,7 @@ obsEmbedClip.events.on('loop', async value => {
     stopRunningClips();
     let config = processRequest(value);
     let currentCounter = ++counter;
-    let clips = await yarnScrapper.scrapClips(value.phrase, value.type, Math.floor(config.clAmount / clipsOnOnePage) + 1);
+    let clips = await yarnScrapper.scrapClips(config, Math.floor(config.clAmount / clipsOnOnePage) + 1);
     clips = clips.slice(0, value.clAmount);
     prefetchClips(clips);
     while (true) {
@@ -119,7 +119,7 @@ async function waitForStatusChange(currentCounter, config) {
             waitingForClient = true;
             return false;
         }
-        await sleep(200);
+        await sleep(50);
     }
     waitingForClient = true;
     return true;
@@ -131,7 +131,7 @@ async function waitUntilNextClipIsNeeded(config) {
     while (!isNextClipNeeded) {
         currentTime = new Date();
         if(currentTime > maxTime) return false;
-        await sleep(100);
+        await sleep(50);
     }
     isNextClipNeeded = false;
     return true;
