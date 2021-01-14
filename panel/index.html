@@ -1,26 +1,27 @@
 <html>
-<body>
+<body class="dark">
 
 <h1>OBS clips</h1>
 
 <form action="/setClips" method="post" id="clipsOptionsForm">
-    <label for="phrase">Phrase:</label>
-    <input class="buttons" type="text" id="phrase" name="phrase"><br><br>
-    <label for="clAmount">Numer of clips:</label>
-    <input class="buttons" type="text" id="clAmount" name="clAmount"><br><br>
-    <label for="time">Clip duration:</label>
-    <input class="buttons" type="text" id="time" name="time"><br><br>
+    <label class="textInput"for="phrase">Phrase:</label>
+    <input class="buttons textInput" type="text" id="phrase" name="phrase"><br><br>
+    <label class="textInput" for="clAmount">Numer of clips:</label>
+    <input class="buttons textInput" type="text" id="clAmount" name="clAmount"><br><br>
+    <label class="textInput"for="time">Clip duration:</label>
+    <input class="buttons textInput" type="text" id="time" name="time"><br><br>
+    <label for="prefetching">Prefetch clips (adds initial delay)</label>
+    <input class="buttons" type="checkbox" id="prefetching" name="prefetching" checked>
+    <br>
     <input class="buttons" type="radio" id="maxloops" name="timerType" value="loops" checked>
     <label for="maxloops">Number of loops</label>
     <input class="buttons" type="radio" id="maxtime" name="timerType" value="time">
     <label for="maxloops">Loop time in seconds</label>
-    <br>
     <br>Search by:<br>
-    <label for="searchByQuote">Quote</label>
     <input class="buttons" type="radio" id="searchByQuote" name="searchType" value="quote" checked>
-    <label for="searchByTitle">Title</label>
+    <label for="searchByQuote">Quote</label>
     <input class="buttons" type="radio" id="searchByTitle" name="searchType" value="title">
-    <br>
+    <label for="searchByTitle">Title</label>
     <br>Clip source:<br>
     <input class="buttons" type="radio" id="allType" name="type" value="all" checked>
     <label for="allType">All</label>
@@ -47,6 +48,10 @@
 </html>
 
 <style>
+    .textInput {
+        width:170px;
+        float:left;
+    }
     body {
         background-color: white;
         color: black;

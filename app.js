@@ -18,7 +18,10 @@ obsEmbedClip.events.on('randomClips', async value => {
     let clips = await yarnScrapper.scrapClips(config, Math.floor(config.clAmount / clipsOnOnePage) + 2);
     shuffle(clips);
     clips = clips.slice(0, config.clAmount);
-    prefetchClips(clips);
+    if (config.prefetching !== undefined) {
+        prefetchClips(clips);
+        await sleep(2500);
+    }
     for (let i = 0; i < config.clAmount; i++) {
         if (stopLoop(counter, currentCounter)) return;
         let clip = clips.pop()
@@ -57,7 +60,10 @@ obsEmbedClip.events.on('loop', async value => {
     let currentCounter = ++counter;
     let clips = await yarnScrapper.scrapClips(config, Math.floor(config.clAmount / clipsOnOnePage) + 1);
     clips = clips.slice(0, value.clAmount);
-    prefetchClips(clips);
+    if (config.prefetching !== undefined) {
+        prefetchClips(clips);
+        await sleep(2500);
+    }
     while (true) {
         for (let i = config.clAmount-1; i >= 0; i--) {
             if (stopLoop(counter, currentCounter)) return;

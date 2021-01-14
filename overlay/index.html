@@ -33,7 +33,6 @@
 
     video.appendChild(source);
     video2.appendChild(sourcePrefetch);
-    video2.playbackRate = 5.0;
 
     $('#video').hide();
     $('#video2').hide();
@@ -63,6 +62,7 @@
             sourcePrefetch.setAttribute('src', currentPrefetched);
             video2.load();
             video2.play();
+            video2.playbackRate = 10.0;
         }
     }
 
