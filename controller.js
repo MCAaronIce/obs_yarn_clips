@@ -28,6 +28,7 @@ class Controller {
         this.app.use('/randomClips', (req, res) => this.randomClips(req, res))
         this.app.use('/loop', (req, res) => this.loop(req, res))
         this.app.use('/stop', (req, res) => this.stop(req, res))
+        this.app.use('/run', (req, res) => this.run(req, res))
         this.app.use('/stretch', (req, res) => this.stretch(req, res))
         this.events = new EventEmitter();
         this.setWebsocketEvents(this.loaded, this.nextClip);
@@ -51,6 +52,9 @@ class Controller {
             });
             this.events.on('stop', function () {
                 socket.emit('stop')
+            });
+            this.events.on('run', function () {
+                socket.emit('run')
             });
             this.events.on('stretch', function () {
                 socket.emit('stretch')
@@ -110,6 +114,11 @@ class Controller {
 
     stop(req, res) {
         this._events.emit('stop', req.body);
+        res.status(204).send();
+    }
+
+    run(req, res) {
+        this._events.emit('run', req.body);
         res.status(204).send();
     }
 

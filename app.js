@@ -6,8 +6,10 @@ var isNextClipNeeded = false;
 var stopRequest = false;
 var stopRequestCounter = -1;
 var counter = 0;
+var isWaitingForRun = true;
+var runBody;
 const clipsOnOnePage = 28;
-const maxLoadingTime = 15; //in seconds
+const maxLoadingTime = 10; //in seconds
 const maxClipTime = 5; //in seconds
 
 
@@ -20,12 +22,13 @@ obsEmbedClip.events.on('randomClips', async value => {
     clips = clips.slice(0, config.clAmount);
     if (config.prefetching !== undefined) {
         prefetchClips(clips);
-        await sleep(2500);
+        isWaitingForRun = true;
+        await waitForRunning();
     }
     for (let i = 0; i < config.clAmount; i++) {
         if (stopLoop(counter, currentCounter)) return;
-        let clip = clips.pop()
-        if(!await playerEventHandler(config, clip, currentCounter)) {
+        let clip = clips[i];
+        if (!await playerEventHandler(config, clip, currentCounter)) {
             obsEmbedClip.hidePlayer();
             return false;
         }
@@ -39,9 +42,8 @@ obsEmbedClip.events.on('randomOne', async value => {
     let currentCounter = ++counter;
     let clips = await yarnScrapper.scrapClips(config, 1);
     shuffle(clips);
-    let clip = clips.pop()
-    await playerEventHandler(config, clip, currentCounter);
-    obsEmbedClip.hidePlayer();
+    clips = clips.slice(0, 4);
+    await runOneClip(config, clips, currentCounter);
 });
 
 obsEmbedClip.events.on('topOne', async value => {
@@ -49,9 +51,8 @@ obsEmbedClip.events.on('topOne', async value => {
     let config = processRequest(value);
     let currentCounter = ++counter;
     let clips = await yarnScrapper.scrapClips(config, 1);
-    let clip = clips[0];
-    await playerEventHandler(config, clip, currentCounter);
-    obsEmbedClip.hidePlayer();
+    clips = clips.slice(0, 4);
+    await runOneClip(config, clips, currentCounter);
 });
 
 obsEmbedClip.events.on('loop', async value => {
@@ -60,19 +61,24 @@ obsEmbedClip.events.on('loop', async value => {
     let currentCounter = ++counter;
     let clips = await yarnScrapper.scrapClips(config, Math.floor(config.clAmount / clipsOnOnePage) + 1);
     clips = clips.slice(0, value.clAmount);
+    let clipsToPrefetch = [];
+    for (let i = config.clAmount - 1; i >= 0; i--) {
+        clipsToPrefetch.push(clips[i]);
+    }
     if (config.prefetching !== undefined) {
-        prefetchClips(clips);
-        await sleep(2500);
+        isWaitingForRun = true;
+        prefetchClips(clipsToPrefetch);
+        await waitForRunning();
     }
     while (true) {
-        for (let i = config.clAmount-1; i >= 0; i--) {
+        for (let i = config.clAmount - 1; i >= 0; i--) {
             if (stopLoop(counter, currentCounter)) return;
-            if (clips.length<i) {
+            if (clips.length < i) {
                 stopRunningClips();
                 return;
             }
             let clip = clips[i];
-            if(!await playerEventHandler(config, clip, currentCounter)) {
+            if (!await playerEventHandler(config, clip, currentCounter)) {
                 obsEmbedClip.hidePlayer();
                 return false;
             }
@@ -93,13 +99,18 @@ obsEmbedClip.events.on('stop', function () {
     stopRunningClips();
 })
 
+obsEmbedClip.events.on('run', value => {
+    runBody = value;
+    isWaitingForRun = false;
+})
+
 async function playerEventHandler(config, clip, currentCounter) {
-    if(clip===undefined) {
+    if (clip === undefined) {
         stopRunningClips()
     } else {
         obsEmbedClip.changeClip(prepareClip(config, clip));
     }
-    if(!await waitForStatusChange(currentCounter, config)) return false;
+    if (!await waitForStatusChange(currentCounter, config)) return false;
     return await waitUntilNextClipIsNeeded(config);
 
 }
@@ -131,12 +142,18 @@ async function waitForStatusChange(currentCounter, config) {
     return true;
 }
 
+async function waitForRunning() {
+    while (isWaitingForRun) {
+        await sleep(50);
+    }
+}
+
 async function waitUntilNextClipIsNeeded(config) {
     let maxTime = maxWaitingTime(config);
     let currentTime;
     while (!isNextClipNeeded) {
         currentTime = new Date();
-        if(currentTime > maxTime) return false;
+        if (currentTime > maxTime) return false;
         await sleep(50);
     }
     isNextClipNeeded = false;
@@ -179,7 +196,7 @@ function processRequest(request) {
     if (config.phrase == null) {
         config.phrase = ""
     }
-    if (config.type == null){
+    if (config.type == null) {
         config.type = "all"
     }
     if (config.clAmount == null) {
@@ -202,13 +219,13 @@ function prepareClip(request, clip) {
     }
 }
 
-function getClipSource(clipId){
+function getClipSource(clipId) {
     return 'https://y.yarn.co/' + clipId + '.mp4';
 }
 
-function prefetchClips(clipsIds){
-    let clips=[];
-    clipsIds.forEach(function(clip){
+function prefetchClips(clipsIds) {
+    let clips = [];
+    clipsIds.forEach(function (clip) {
         clips.push(getClipSource(clip.replace('/yarn-clip/', '')))
     })
     obsEmbedClip.prefetch(clips);
@@ -218,4 +235,31 @@ function sleep(ms) {
     return new Promise((resolve) => {
         setTimeout(resolve, ms);
     });
+}
+
+function getChosenClip(config) {
+    if (config['submit_clip_1.x'] !== undefined) return 0;
+    if (config['submit_clip_2.x'] !== undefined) return 1;
+    if (config['submit_clip_3.x'] !== undefined) return 2;
+    if (config['submit_clip_4.x'] !== undefined) return 3;
+    if (config['submit_clip_5.x'] !== undefined) return 4;
+    if (config['submit_clip_6.x'] !== undefined) return 5;
+    if (config['submit_clip_7.x'] !== undefined) return 6;
+    if (config['submit_clip_8.x'] !== undefined) return 7;
+    if (config['submit_clip_9.x'] !== undefined) return 8;
+    if (config['submit_clip_10.x'] !== undefined) return 9;
+}
+
+async function runOneClip(config, clips, currentCounter) {
+    let clip;
+    isWaitingForRun = true;
+    if (config.prefetching !== undefined) {
+        prefetchClips(clips);
+        await waitForRunning();
+        clip = clips[getChosenClip(runBody)];
+    } else {
+        clip = clips[0];
+    }
+    await playerEventHandler(config, clip, currentCounter);
+    obsEmbedClip.hidePlayer();
 }

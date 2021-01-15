@@ -6,11 +6,11 @@
 <form action="/setClips" method="post" id="clipsOptionsForm">
     <label class="textInput"for="phrase">Phrase:</label>
     <input class="buttons textInput" type="text" id="phrase" name="phrase"><br><br>
-    <label class="textInput" for="clAmount">Numer of clips:</label>
+    <label class="textInput" for="clAmount">Numer of clips: (max 10)</label>
     <input class="buttons textInput" type="text" id="clAmount" name="clAmount"><br><br>
     <label class="textInput"for="time">Clip duration:</label>
     <input class="buttons textInput" type="text" id="time" name="time"><br><br>
-    <label for="prefetching">Prefetch clips (adds initial delay)</label>
+    <label for="prefetching">Prefetch clips (use 'Run' to start clips)</label>
     <input class="buttons" type="checkbox" id="prefetching" name="prefetching" checked>
     <br>
     <input class="buttons" type="radio" id="maxloops" name="timerType" value="loops" checked>
@@ -39,15 +39,41 @@
     <input class="buttons" type="submit" value="Random" formaction="/randomClips">
     <input class="buttons" type="submit" value="Loop" formaction="/loop">
     <input class="buttons" type="submit" value="Stop" formaction="/stop">
+    <input class="buttons" type="submit" value="Run" formaction="/run">
     <br><br>
     <input class="buttons" type="submit" value="Toggle video stretch" formaction="/stretch">
     <button class="buttons" type="button" onclick="darkMode()">Toggle dark mode</button>
+    <div class="column">
+        <div class="row">
+            <input type="image" name="submit_clip_1" value="clip_1" id="preview_1" src="" formaction="/run">
+            <input type="image" name="submit_clip_2" value="clip_2" id="preview_2" src="" formaction="/run">
+        </div>
+        <div class="row">
+            <input type="image" name="submit_clip_3" value="clip_3" id="preview_3" src="" formaction="/run">
+            <input type="image" name="submit_clip_4" value="clip_4" id="preview_4" src="" formaction="/run">
+        </div>
+        <div class="row">
+            <input type="image" name="submit_clip_5" value="clip_5" id="preview_5" src="" formaction="/run">
+            <input type="image" name="submit_clip_6" value="clip_6" id="preview_6" src="" formaction="/run">
+        </div>
+        <div class="row">
+            <input type="image" name="submit_clip_7" value="clip_7" id="preview_7" src="" formaction="/run">
+            <input type="image" name="submit_clip_8" value="clip_8" id="preview_8" src="" formaction="/run">
+        </div>
+        <div class="row">
+            <input type="image" name="submit_clip_9" value="clip_9" id="preview_9" src="" formaction="/run">
+            <input type="image" name="submit_clip_10" value="clip_10" id="preview_10" src="" formaction="/run">
+        </div>
+    </div>
 </form>
 
 </body>
 </html>
 
 <style>
+    img {
+        width: 40%;
+    }
     .textInput {
         width:170px;
         float:left;
@@ -67,7 +93,46 @@
     }
 </style>
 
+<script type="text/javascript " src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
+
+    var socket = io.connect();
+
+    function hideGifs() {
+        for (let i = 0; i < 10; i++) {
+            $('#preview_' + (i + 1)).attr('src', '');
+            $('#preview_' + (i + 1)).hide();
+        }
+    }
+
+    hideGifs();
+
+    socket.on('stop', function () {
+        hideGifs();
+    });
+
+    socket.on('hide', function () {
+        hideGifs();
+    });
+
+    socket.on('prefetch', function (clipsUrls) {
+        let numberOfClips;
+        if (clipsUrls.length > 10) {
+            numberOfClips = 10;
+        }
+        clipsUrls = clipsUrls.slice(0, numberOfClips);
+        for (let i = 0; i < clipsUrls.length; i++) {
+            $('#preview_' + (i + 1)).attr("src", clipsUrls[i].replaceAll('.mp4', '_text.gif'));
+            $('#preview_' + (i + 1)).show();
+        }
+        for (let i = clipsUrls.length; i < 10; i++) {
+            $('#preview_' + (i + 1)).hide();
+        }
+    });
+
+
     function darkMode(){
         let element = document.body;
         element.classList.toggle("dark");
