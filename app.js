@@ -252,6 +252,7 @@ function getChosenClip(config) {
     if (config['submit_clip_8.x'] !== undefined) return 7;
     if (config['submit_clip_9.x'] !== undefined) return 8;
     if (config['submit_clip_10.x'] !== undefined) return 9;
+    return 0;
 }
 
 async function runOneClip(config, clips, currentCounter) {
