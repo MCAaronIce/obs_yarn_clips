@@ -4,13 +4,13 @@
 <h1>OBS clips</h1>
 
 <form action="/setClips" method="post" id="clipsOptionsForm">
-    <label class="textInput"for="phrase">Phrase:</label>
-    <input class="buttons textInput" type="text" id="phrase" name="phrase"><br><br>
+    <label class="textInput" for="phrase">Phrase:</label>
+    <input class="buttons textInput" type="text" id="phrase" name="phrase" value="Hello there"><br><br>
     <label class="textInput" for="clAmount">Numer of clips: (max 10)</label>
-    <input class="buttons textInput" type="text" id="clAmount" name="clAmount"><br><br>
-    <label class="textInput"for="time">Clip duration:</label>
-    <input class="buttons textInput" type="text" id="time" name="time"><br><br>
-    <label for="prefetching">Prefetch clips (use 'Run' to start clips)</label>
+    <input class="buttons textInput" type="text" id="clAmount" name="clAmount" value="5"><br><br>
+    <label class="textInput" for="time">Clip duration:</label>
+    <input class="buttons textInput" type="text" id="time" name="time" value="1"><br><br>
+    <label for="prefetching">Prefetch clips (use 'Run' or click on preview to play)</label>
     <input class="buttons" type="checkbox" id="prefetching" name="prefetching" checked>
     <br>
     <input class="buttons" type="radio" id="maxloops" name="timerType" value="loops" checked>
@@ -34,15 +34,17 @@
     <input class="buttons" type="radio" id="trailersType" name="type" value="trailers">
     <label for="trailersType">Trailers</label>
     <br><br>
+    <input class="buttons" type="submit" value="Toggle video stretch" formaction="/stretch">
+    <button class="buttons" type="button" onclick="darkMode()">Toggle dark mode</button>
+    <br><br>
     <input class="buttons" type="submit" value="One random" formaction="/randomOne">
     <input class="buttons" type="submit" value="Top result" formaction="/topResult">
     <input class="buttons" type="submit" value="Random" formaction="/randomClips">
     <input class="buttons" type="submit" value="Loop" formaction="/loop">
-    <input class="buttons" type="submit" value="Stop" formaction="/stop">
-    <input class="buttons" type="submit" value="Run" formaction="/run">
     <br><br>
-    <input class="buttons" type="submit" value="Toggle video stretch" formaction="/stretch">
-    <button class="buttons" type="button" onclick="darkMode()">Toggle dark mode</button>
+    <input class="buttons" type="submit" value="Run" formaction="/run">
+    <input class="buttons" type="submit" value="Stop" formaction="/stop">
+    <br><br>
     <div class="column">
         <div class="row">
             <input type="image" name="submit_clip_1" value="clip_1" id="preview_1" src="" formaction="/run">
@@ -74,14 +76,17 @@
     img {
         width: 40%;
     }
+
     .textInput {
-        width:170px;
-        float:left;
+        width: 170px;
+        float: left;
     }
+
     body {
         background-color: white;
         color: black;
     }
+
     .buttons {
         background-color: #676767;
         color: #e7e7e7;
@@ -118,6 +123,7 @@
     });
 
     socket.on('prefetch', function (clipsUrls) {
+        hideGifs();
         let numberOfClips;
         if (clipsUrls.length > 10) {
             numberOfClips = 10;
@@ -133,7 +139,7 @@
     });
 
 
-    function darkMode(){
+    function darkMode() {
         let element = document.body;
         element.classList.toggle("dark");
     }
