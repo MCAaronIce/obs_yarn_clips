@@ -23,7 +23,7 @@ obsEmbedClip.events.on('randomClips', async value => {
     if (config.prefetching !== undefined) {
         prefetchClips(clips);
         isWaitingForRun = true;
-        await waitForRunning();
+        if(!await waitForRunning(currentCounter)) return;
     }
     for (let i = 0; i < config.clAmount; i++) {
         if (stopLoop(counter, currentCounter)) return;
@@ -68,7 +68,7 @@ obsEmbedClip.events.on('loop', async value => {
     if (config.prefetching !== undefined) {
         isWaitingForRun = true;
         prefetchClips(clipsToPrefetch);
-        await waitForRunning();
+        if(!await waitForRunning(currentCounter)) return;
     }
     while (true) {
         for (let i = config.clAmount - 1; i >= 0; i--) {
@@ -142,10 +142,14 @@ async function waitForStatusChange(currentCounter, config) {
     return true;
 }
 
-async function waitForRunning() {
+async function waitForRunning(currentCounter) {
     while (isWaitingForRun) {
+        if ((stopRequest && currentCounter == stopRequestCounter)) {
+            return false;
+        }
         await sleep(50);
     }
+    return true;
 }
 
 async function waitUntilNextClipIsNeeded(config) {
@@ -255,7 +259,7 @@ async function runOneClip(config, clips, currentCounter) {
     isWaitingForRun = true;
     if (config.prefetching !== undefined) {
         prefetchClips(clips);
-        await waitForRunning();
+        if(!await waitForRunning(currentCounter)) return;
         clip = clips[getChosenClip(runBody)];
     } else {
         clip = clips[0];
