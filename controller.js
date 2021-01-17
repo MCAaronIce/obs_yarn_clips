@@ -10,6 +10,7 @@ class Controller {
     _io
     _events
     _socket
+    _token
 
     constructor() {
         this.port = process.env.PORT || 8000;
@@ -19,8 +20,13 @@ class Controller {
         this.app.use(express.urlencoded({
             extended: true
         }))
+        this._token = process.env.TOKEN;
         this.loaded = this.loaded.bind(this);
         this.nextClip = this.nextClip.bind(this);
+        if(this._token!==undefined) {
+            console.log("Authorizing active")
+            this.app.use((req, res, next) => this.authorize(req, res, next));
+        }
         this.app.use(express.static('overlay'));
         this.app.use('/panel', express.static('panel'));
         this.app.use('/randomOne', (req, res) => this.randomOne(req, res))
@@ -126,6 +132,16 @@ class Controller {
         this._events.emit('stretch');
         res.status(204).send();
     }
+    authorize(req, res, next) {
+        if (req.query.token === this._token) {
+            console.log('Authorized');
+            next();
+        } else{
+            console.log('Unauthorized access - ' + new Date())
+            res.status(404).send();
+        }
+    }
+
 
     get port() {
         return this._port;
