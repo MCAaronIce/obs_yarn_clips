@@ -21,7 +21,7 @@ obsEmbedClip.events.on('randomClips', async value => {
     shuffle(clips);
     clips = clips.slice(0, config.clAmount);
     if (config.prefetching !== undefined) {
-        prefetchClips(clips);
+        prefetchClips(clips, config.phrase);
         isWaitingForRun = true;
         if(!await waitForRunning(currentCounter)) return;
     }
@@ -67,7 +67,7 @@ obsEmbedClip.events.on('loop', async value => {
     }
     if (config.prefetching !== undefined) {
         isWaitingForRun = true;
-        prefetchClips(clipsToPrefetch);
+        prefetchClips(clipsToPrefetch, config.phrase);
         if(!await waitForRunning(currentCounter)) return;
     }
     while (true) {
@@ -227,12 +227,12 @@ function getClipSource(clipId) {
     return 'https://y.yarn.co/' + clipId + '.mp4';
 }
 
-function prefetchClips(clipsIds) {
+function prefetchClips(clipsIds, phrase) {
     let clips = [];
     clipsIds.forEach(function (clip) {
         clips.push(getClipSource(clip.replace('/yarn-clip/', '')))
     })
-    obsEmbedClip.prefetch(clips);
+    obsEmbedClip.prefetch(clips, phrase);
 }
 
 function sleep(ms) {
@@ -259,7 +259,7 @@ async function runOneClip(config, clips, currentCounter) {
     let clip;
     isWaitingForRun = true;
     if (config.prefetching !== undefined) {
-        prefetchClips(clips);
+        prefetchClips(clips, config.phrase);
         if(!await waitForRunning(currentCounter)) return;
         clip = clips[getChosenClip(runBody)];
     } else {

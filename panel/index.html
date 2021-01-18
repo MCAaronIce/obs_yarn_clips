@@ -2,7 +2,7 @@
 <body class="dark">
 
 <h1>OBS clips</h1>
-
+<p id="lastPhrase">Last phrase: ???</p>
 <form action="/setClips" method="post" id="clipsOptionsForm">
     <label class="textInput" for="phrase">Phrase:</label>
     <input class="buttons textInput" type="text" id="phrase" name="phrase" value="Hello there"><br><br>
@@ -122,7 +122,8 @@
         hideGifs();
     });
 
-    socket.on('prefetch', function (clipsUrls) {
+    socket.on('prefetch', function (clipsUrls, phrase) {
+        $('#lastPhrase').text("Last phrase: " + phrase);
         hideGifs();
         let numberOfClips;
         if (clipsUrls.length > 10) {

@@ -47,8 +47,8 @@ class Controller {
             this.events.on('changeClip', clip => {
                 socket.emit('changeClip', clip)
             });
-            this.events.on('prefetch', clips => {
-                socket.emit('prefetch', clips)
+            this.events.on('prefetch', (clips, phrase) => {
+                socket.emit('prefetch', clips, phrase)
             });
             this.events.on('hide', function () {
                 socket.emit('hide')
@@ -78,8 +78,8 @@ class Controller {
         this._events.emit('changeClip', clip);
     }
 
-    prefetch(clips) {
-        this._events.emit('prefetch', clips);
+    prefetch(clips, phrase) {
+        this._events.emit('prefetch', clips, phrase);
     }
 
     loaded() {
