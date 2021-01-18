@@ -51,14 +51,13 @@
 
     socket.on('prefetch', function (clipsUrls){
         clipsToPrefetch = clipsUrls;
-        clipsToPrefetch.pop();
         preloadVideo();
     })
 
     function preloadVideo (){
         prefetchedCounter++;
         if(prefetchedCounter<10 && clipsToPrefetch.length>0){
-            let currentPrefetched = clipsToPrefetch.pop();
+            let currentPrefetched = clipsToPrefetch.shift();
             sourcePrefetch.setAttribute('src', currentPrefetched);
             video2.load();
             video2.play();
