@@ -4,11 +4,11 @@
 <h1>OBS clips</h1>
 <p id="lastPhrase">Last phrase: ???</p>
 <form action="/setClips" method="post" id="clipsOptionsForm">
-    <label class="textInput" for="phrase">Phrase:</label>
+    <label class="textInput desc" for="phrase">Phrase:</label>
     <input class="buttons textInput" type="text" id="phrase" name="phrase" value="Hello there"><br><br>
-    <label class="textInput" for="clAmount">Numer of clips: (max 10)</label>
+    <label class="textInput desc" for="clAmount">Numer of clips: (max 10)</label>
     <input class="buttons textInput" type="text" id="clAmount" name="clAmount" value="5"><br><br>
-    <label class="textInput" for="time">Clip duration:</label>
+    <label class="textInput desc" for="time">Clip duration:</label>
     <input class="buttons textInput" type="text" id="time" name="time" value="1"><br><br>
     <label for="prefetching">Prefetch clips (use 'Run' or click on preview to play)</label>
     <input class="buttons" type="checkbox" id="prefetching" name="prefetching" checked>
@@ -34,17 +34,19 @@
     <input class="buttons" type="radio" id="trailersType" name="type" value="trailers">
     <label for="trailersType">Trailers</label>
     <br><br>
-    <input class="buttons" type="submit" value="Toggle video stretch" formaction="/stretch">
-    <button class="buttons" type="button" onclick="darkMode()">Toggle dark mode</button>
+    <div class="buttonsD">
+    <input class="buttons buttonsHalf" type="submit" value="Toggle video stretch" formaction="/stretch">
+    <button class="buttons buttonsHalf" type="button" onclick="darkMode()">Toggle dark mode</button>
     <br><br>
-    <input class="buttons" type="submit" value="One random" formaction="/randomOne">
-    <input class="buttons" type="submit" value="Top result" formaction="/topResult">
-    <input class="buttons" type="submit" value="Random" formaction="/randomClips">
-    <input class="buttons" type="submit" value="Loop" formaction="/loop">
+    <input class="buttons buttonsQuarter" type="submit" value="One random" formaction="/randomOne">
+    <input class="buttons buttonsQuarter" type="submit" value="Top result" formaction="/topResult">
+    <input class="buttons buttonsQuarter" type="submit" value="Random" formaction="/randomClips">
+    <input class="buttons buttonsQuarter" type="submit" value="Loop" formaction="/loop">
     <br><br>
-    <input class="buttons" type="submit" value="Run" formaction="/run">
-    <input class="buttons" type="submit" value="Stop" formaction="/stop">
+    <input class="buttons buttonsHalf" type="submit" value="Run" formaction="/run">
+    <input class="buttons buttonsHalf" type="submit" value="Stop" formaction="/stop">
     <br><br>
+    </div>
     <div class="column">
         <div class="row">
             <input type="image" name="submit_clip_1" value="clip_1" id="preview_1" src="" formaction="/run">
@@ -76,10 +78,21 @@
     img {
         width: 40%;
     }
+    .desc{
+        display: inline-block;
+        width:300px;
+        text-align: center;
+    }
 
     .textInput {
-        width: 170px;
+        width: 50%;
         float: left;
+    }
+    .buttonsHalf {
+        width: 49%;
+    }
+    .buttonsQuarter {
+        width: 24%;
     }
 
     body {
