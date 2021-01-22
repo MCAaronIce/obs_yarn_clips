@@ -29,6 +29,7 @@ obsEmbedClip.events.on('run', value => {
 })
 
 obsEmbedClip.events.on('randomClips', async requestBody => {
+    stopRunningClips();
     if(isNaN(requestBody.clAmount)) requestBody.clAmount = 0;
     let numberOfClipPages = Math.floor(requestBody.clAmount / clipsOnOnePage) + 2;
     let {config, currentCounter, clips} = await setupClips(requestBody, numberOfClipPages);
@@ -51,6 +52,7 @@ obsEmbedClip.events.on('randomClips', async requestBody => {
 });
 
 obsEmbedClip.events.on('randomOne', async requestBody => {
+    stopRunningClips();
     let {config, currentCounter, clips} = await setupClips(requestBody, 1);
     utils.shuffle(clips);
     clips = clips.slice(0, 4);
@@ -58,12 +60,14 @@ obsEmbedClip.events.on('randomOne', async requestBody => {
 });
 
 obsEmbedClip.events.on('topOne', async requestBody => {
+    stopRunningClips();
     let {config, currentCounter, clips} = await setupClips(requestBody, 1);
     clips = clips.slice(0, 4);
     await runOneClip(config, clips, currentCounter);
 });
 
 obsEmbedClip.events.on('loop', async requestBody => {
+    stopRunningClips();
     if(isNaN(requestBody.clAmount)) requestBody.clAmount = 0;
     let numberOfClipPages = Math.floor(requestBody.clAmount / clipsOnOnePage) + 1;
     let {config, currentCounter, clips} = await setupClips(requestBody, numberOfClipPages);
@@ -108,7 +112,6 @@ async function runOneClip(config, clips, currentCounter) {
 }
 
 async function setupClips(requestBody, numberOfPages) {
-    stopRunningClips();
     let config = utils.processRequest(requestBody);
     let currentCounter = ++counter;
     let clips = await yarnScrapper.scrapClips(config, numberOfPages);
