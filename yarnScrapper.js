@@ -15,7 +15,7 @@ class YarnScrapper {
                 $('.pointer').each(
                     function () {
                         let currClip = $(this).attr('href');
-                        if(currClip!=undefined && !clips.includes(currClip) && currClip!='/'){
+                        if(currClip!==undefined && !clips.includes(currClip) && currClip!=='/'){
                             clips.push(currClip);
                         }
                     }
@@ -30,14 +30,14 @@ module.exports = new YarnScrapper();
 
 function getUrl(phrase, type, searchType, page){
     let urlBase = 'https://getyarn.io/yarn-find?'
-    let phraseEncoded = 'text=' + encodeURI(phrase)
-    if(searchType == 'title'){
+    let phraseEncoded
+    if(searchType === 'title'){
         phraseEncoded = 'text=' + encodeURI(':"'+phrase+'"')
     } else {
         phraseEncoded = 'text=' + encodeURI(phrase)
     }
     let typeEncoded;
-    if(type!=null && type!='all') {
+    if(type!=null && type!=='all') {
         typeEncoded = '&type=' + type;
     } else {
         typeEncoded = '';

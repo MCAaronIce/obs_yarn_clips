@@ -9,7 +9,6 @@ class Controller {
     _server
     _io
     _events
-    _socket
     _token
 
     constructor() {
@@ -88,10 +87,6 @@ class Controller {
 
     nextClip() {
         this._events.emit('nextClip');
-    }
-
-    showPlayer() {
-        this._events.emit('show');
     }
 
     hidePlayer() {
@@ -181,15 +176,6 @@ class Controller {
 
     set events(value) {
         this._events = value;
-    }
-
-
-    get socket() {
-        return this._socket;
-    }
-
-    set socket(value) {
-        this._socket = value;
     }
 
 }
