@@ -12,7 +12,7 @@ class YarnScrapper {
             await axios.get(getUrl(config.phrase, config.type, config.searchType, page)).then((response) => {
                 let html = response.data;
                 $ = cheerio.load(html);
-                $('.pointer').each(
+                $('.card > .p').each(
                     function () {
                         let currClip = $(this).attr('href');
                         if(currClip!==undefined && !clips.includes(currClip) && currClip!=='/'){
