@@ -8,11 +8,12 @@
 </head>
 <body style="background-color: rgba(0, 0, 0, 0);">
 <div style="position: absolute; top:0; left:0; overflow: hidden; width: 100%; height: 460px;">
-    <video style="position: absolute; top:0; left:0; object-fit: fill" id="video" class="videoPlayer" width="100%" height="460px" loop="loop"></video>
-    <video style="display: none;" id="video2" class="hiddenVideoPlayer" width="100%" height="460px" muted="muted" preload="auto"></video>
+    <video style="position: absolute; top:0; left:0; object-fit: fill" id="video" class="videoPlayer" width="100%"
+           height="460px" loop="loop"></video>
+    <video style="display: none;" id="video2" class="hiddenVideoPlayer" width="100%" height="460px" muted="muted"
+           preload="auto"></video>
 </div>
 <script type="text/javascript " src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
     var socket = io.connect();
@@ -28,6 +29,10 @@
     var isTimerActive = false;
     var loopTime = 1;
 
+    const secondInMs = 1000;
+    const maxPrefetchedClips = 10;
+    const playbackRate = 10.0;
+
     source.setAttribute('src', '');
     sourcePrefetch.setAttribute('src', '');
 
@@ -42,51 +47,51 @@
         $('#video').show();
         video.play();
         prefetchedCounter--;
-        if(isTimerActive) {
-            setTimeout(function (){
+        if (isTimerActive) {
+            setTimeout(function () {
                 socket.emit('nextClip');
             }, loopTime)
         }
     })
 
-    socket.on('prefetch', function (clipsUrls){
+    socket.on('prefetch', function (clipsUrls) {
         clipsToPrefetch = clipsUrls;
         preloadVideo();
     })
 
-    function preloadVideo (){
+    function preloadVideo() {
         prefetchedCounter++;
-        if(prefetchedCounter<10 && clipsToPrefetch.length>0){
+        if (prefetchedCounter < maxPrefetchedClips && clipsToPrefetch.length > 0) {
             let currentPrefetched = clipsToPrefetch.shift();
             sourcePrefetch.setAttribute('src', currentPrefetched);
             video2.load();
             video2.play();
-            video2.playbackRate = 10.0;
+            video2.playbackRate = playbackRate;
         }
     }
 
 
-    $('#video2').on('ended', function (){
+    $('#video2').on('ended', function () {
         preloadVideo();
     });
 
     socket.on('changeClip', function (clip) {
         $('#video').off('ended');
-        if(clip.timerType == 'time'){
+        if (clip.timerType == 'time') {
             isTimerActive = true;
-            $('#video').attr('loop','loop');
+            $('#video').attr('loop', 'loop');
             changeClip(clip)
-            loopTime = isNaN(clip.time)||clip.time<1 ? 3000 : clip.time*1000;
+            loopTime = isNaN(clip.time) || clip.time < 1 ? 3 * secondInMs : clip.time * secondInMs;
         } else {
             isTimerActive = false;
-            $('#video').removeAttr('loop','loop');
+            $('#video').removeAttr('loop', 'loop');
             clipLoopCounter = 1;
-            $('#video').on('ended', function (){
-                if(clipLoopCounter < clip.time){
+            $('#video').on('ended', function () {
+                if (clipLoopCounter < clip.time) {
                     this.currentTime = 0;
                     this.play();
                     clipLoopCounter++;
-                } else{
+                } else {
                     clipLoopCounter = 1;
                     socket.emit('nextClip');
                 }
@@ -95,7 +100,7 @@
         }
     });
 
-    function changeClip(clip){
+    function changeClip(clip) {
         source.setAttribute('src', clip.src);
         video.load();
     }
@@ -113,10 +118,10 @@
     });
 
     socket.on('stretch', function () {
-        if($('#video').css('object-fit')==='fill'){
-            $('#video').css('object-fit','')
+        if ($('#video').css('object-fit') === 'fill') {
+            $('#video').css('object-fit', '')
         } else {
-            $('#video').css('object-fit','fill')
+            $('#video').css('object-fit', 'fill')
         }
     });
 

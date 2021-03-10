@@ -1,5 +1,6 @@
 const cheerio = require('cheerio');
 const axios = require('axios')
+const urlBase = 'https://getyarn.io/yarn-find?';
 
 class YarnScrapper {
 
@@ -29,7 +30,6 @@ class YarnScrapper {
 module.exports = new YarnScrapper();
 
 function getUrl(phrase, type, searchType, page){
-    let urlBase = 'https://getyarn.io/yarn-find?'
     let phraseEncoded
     if(searchType === 'title'){
         phraseEncoded = 'text=' + encodeURI(':"'+phrase+'"')

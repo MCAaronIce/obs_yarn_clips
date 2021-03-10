@@ -15,12 +15,13 @@ module.exports = {
     },
     prepareClip : (request, clip) => {
         clip = clip.replace('/yarn-clip/', '');
+        let yarnURL = 'https://y.yarn.co/';
         return {
             timerType: request.timerType,
             time: request.time,
             type: request.type,
-            src: 'https://y.yarn.co/' + clip + '.mp4',
-            poster: 'https://y.yarn.co/' + clip + '_screenshot.jpg'
+            src: yarnURL + clip + '.mp4',
+            poster: yarnURL + clip + '_screenshot.jpg'
         }
     },
     processRequest : (request) => {

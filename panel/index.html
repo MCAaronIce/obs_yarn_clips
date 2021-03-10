@@ -36,8 +36,8 @@
     <input class="buttons buttonsHalf" type="submit" value="Toggle video stretch" formaction="/stretch">
     <button class="buttons buttonsHalf" type="button" onclick="darkMode()">Toggle dark mode</button>
     <br><br>
-    <input class="buttons buttonsQuarter" type="submit" value="One random" formaction="/randomOne">
-    <input class="buttons buttonsQuarter" type="submit" value="Top result" formaction="/topResult">
+    <input class="buttons buttonsQuarter" type="submit" value="One from random" formaction="/randomOne">
+    <input class="buttons buttonsQuarter" type="submit" value="One from Top 4" formaction="/topResult">
     <input class="buttons buttonsQuarter" type="submit" value="Random" formaction="/randomClips">
     <input class="buttons buttonsQuarter" type="submit" value="Loop" formaction="/loop">
     <br><br>
@@ -46,24 +46,34 @@
     <br><br>
     <div class="column">
         <div class="row">
-            <input type="image" class="clipPreview" name="submit_clip_1" value="clip_1" id="preview_1" src="" formaction="/run">
-            <input type="image" class="clipPreview" name="submit_clip_2" value="clip_2" id="preview_2" src="" formaction="/run">
+            <input type="image" class="clipPreview" name="submit_clip_1" value="clip_1" id="preview_1" src=""
+                   formaction="/run">
+            <input type="image" class="clipPreview" name="submit_clip_2" value="clip_2" id="preview_2" src=""
+                   formaction="/run">
         </div>
         <div class="row">
-            <input type="image" class="clipPreview" name="submit_clip_3" value="clip_3" id="preview_3" src="" formaction="/run">
-            <input type="image" class="clipPreview" name="submit_clip_4" value="clip_4" id="preview_4" src="" formaction="/run">
+            <input type="image" class="clipPreview" name="submit_clip_3" value="clip_3" id="preview_3" src=""
+                   formaction="/run">
+            <input type="image" class="clipPreview" name="submit_clip_4" value="clip_4" id="preview_4" src=""
+                   formaction="/run">
         </div>
         <div class="row">
-            <input type="image" class="clipPreview" name="submit_clip_5" value="clip_5" id="preview_5" src="" formaction="/run">
-            <input type="image" class="clipPreview" name="submit_clip_6" value="clip_6" id="preview_6" src="" formaction="/run">
+            <input type="image" class="clipPreview" name="submit_clip_5" value="clip_5" id="preview_5" src=""
+                   formaction="/run">
+            <input type="image" class="clipPreview" name="submit_clip_6" value="clip_6" id="preview_6" src=""
+                   formaction="/run">
         </div>
         <div class="row">
-            <input type="image" class="clipPreview" name="submit_clip_7" value="clip_7" id="preview_7" src="" formaction="/run">
-            <input type="image" class="clipPreview" name="submit_clip_8" value="clip_8" id="preview_8" src="" formaction="/run">
+            <input type="image" class="clipPreview" name="submit_clip_7" value="clip_7" id="preview_7" src=""
+                   formaction="/run">
+            <input type="image" class="clipPreview" name="submit_clip_8" value="clip_8" id="preview_8" src=""
+                   formaction="/run">
         </div>
         <div class="row">
-            <input type="image" class="clipPreview" name="submit_clip_9" value="clip_9" id="preview_9" src="" formaction="/run">
-            <input type="image" class="clipPreview" name="submit_clip_10" value="clip_10" id="preview_10" src="" formaction="/run">
+            <input type="image" class="clipPreview" name="submit_clip_9" value="clip_9" id="preview_9" src=""
+                   formaction="/run">
+            <input type="image" class="clipPreview" name="submit_clip_10" value="clip_10" id="preview_10" src=""
+                   formaction="/run">
         </div>
     </div>
 </form>
@@ -76,9 +86,10 @@
         height: 26vw;
         width: 46vw;
     }
-    .desc{
+
+    .desc {
         display: inline-block;
-        width:300px;
+        width: 300px;
         text-align: center;
     }
 
@@ -86,15 +97,19 @@
         width: 50%;
         float: left;
     }
+
     .buttonsHalf {
         width: 49%;
     }
+
     .buttonsQuarter {
         width: 24%;
     }
+
     br {
         line-height: 80%;
     }
+
     body {
         background-color: white;
         color: black;
@@ -112,16 +127,19 @@
 </style>
 
 <script type="text/javascript " src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
 
     var socket = io.connect();
+    const previewSelector = '#preview_';
+    const maxPrefetchedClips = 10;
+    const gifFilename = '_text.gif';
+    const clipFormat = '.mp4';
 
     function hideGifs() {
-        for (let i = 0; i < 10; i++) {
-            $('#preview_' + (i + 1)).attr('src', '');
-            $('#preview_' + (i + 1)).hide();
+        for (let i = 0; i < maxPrefetchedClips; i++) {
+            $(previewSelector + (i + 1)).attr('src', '');
+            $(previewSelector + (i + 1)).hide();
         }
     }
 
@@ -139,16 +157,16 @@
         $('#lastPhrase').text("Last phrase: " + phrase);
         hideGifs();
         let numberOfClips;
-        if (clipsUrls.length > 10) {
-            numberOfClips = 10;
+        if (clipsUrls.length > maxPrefetchedClips) {
+            numberOfClips = maxPrefetchedClips;
         }
         clipsUrls = clipsUrls.slice(0, numberOfClips);
         for (let i = 0; i < clipsUrls.length; i++) {
-            $('#preview_' + (i + 1)).attr("src", clipsUrls[i].replaceAll('.mp4', '_text.gif'));
-            $('#preview_' + (i + 1)).show();
+            $(previewSelector + (i + 1)).attr("src", clipsUrls[i].replaceAll(clipFormat, gifFilename));
+            $(previewSelector + (i + 1)).show();
         }
-        for (let i = clipsUrls.length; i < 10; i++) {
-            $('#preview_' + (i + 1)).hide();
+        for (let i = clipsUrls.length; i < maxPrefetchedClips; i++) {
+            $(previewSelector + (i + 1)).hide();
         }
     });
 
