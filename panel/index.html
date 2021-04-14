@@ -1,49 +1,55 @@
 <html>
-<body class="dark">
-<h2>OBS clips</h2>
+<body class="dark" id="main">
 <p id="lastPhrase">Last phrase: ???</p>
 <form action="/setClips" method="post" id="clipsOptionsForm">
-    <label class="textInput desc" for="phrase">Phrase:</label>
-    <input class="buttons textInput" type="text" id="phrase" name="phrase" value="Hello there"><br><br>
-    <label class="textInput desc" for="clAmount">Numer of clips: (max 10)</label>
-    <input class="buttons textInput" type="text" id="clAmount" name="clAmount" value="5"><br><br>
-    <label class="textInput desc" for="time">Clip duration:</label>
-    <input class="buttons textInput" type="text" id="time" name="time" value="1"><br><br>
-    <label for="prefetching">Prefetch clips (use 'Run' or click on preview to play)</label>
-    <input class="buttons" type="checkbox" id="prefetching" name="prefetching" checked>
-    <br>
-    <input class="buttons" type="radio" id="maxloops" name="timerType" value="loops" checked>
-    <label for="maxloops">Number of loops</label>
-    <input class="buttons" type="radio" id="maxtime" name="timerType" value="time">
-    <label for="maxloops">Loop time in seconds</label>
-    <br>Search by:<br>
-    <input class="buttons" type="radio" id="searchByQuote" name="searchType" value="quote" checked>
-    <label for="searchByQuote">Quote</label>
-    <input class="buttons" type="radio" id="searchByTitle" name="searchType" value="title">
-    <label for="searchByTitle">Title</label>
-    <br>Clip source:<br>
-    <input class="buttons" type="radio" id="allType" name="type" value="all" checked>
-    <label for="allType">All</label>
-    <input class="buttons" type="radio" id="moviesType" name="type" value="movies">
-    <label for="moviesType">Movies</label>
-    <input class="buttons" type="radio" id="musicType" name="type" value="music">
-    <label for="musicType">Music</label>
-    <input class="buttons" type="radio" id="tvType" name="type" value="tv">
-    <label for="tvType">TV</label>
-    <input class="buttons" type="radio" id="trailersType" name="type" value="trailers">
-    <label for="trailersType">Trailers</label>
-    <br><br>
-    <input class="buttons buttonsHalf" type="submit" value="Toggle video stretch" formaction="/stretch">
-    <button class="buttons buttonsHalf" type="button" onclick="darkMode()">Toggle dark mode</button>
-    <br><br>
-    <input class="buttons buttonsQuarter" type="submit" value="One from random" formaction="/randomOne">
-    <input class="buttons buttonsQuarter" type="submit" value="One from Top 4" formaction="/topResult">
-    <input class="buttons buttonsQuarter" type="submit" value="Random" formaction="/randomClips">
-    <input class="buttons buttonsQuarter" type="submit" value="Loop" formaction="/loop">
-    <br><br>
-    <input class="buttons buttonsHalf" type="submit" value="Run" formaction="/run">
-    <input class="buttons buttonsHalf" type="submit" value="Stop" formaction="/stop">
-    <br><br>
+    <div id="control">
+        <label class="textInput desc" for="phrase">Phrase:</label>
+        <input class="buttons textInput" type="text" id="phrase" name="phrase" value="Hello there"><br><br>
+        <label class="textInput desc" for="clAmount">Numer of clips: (max 10)</label>
+        <input class="buttons textInput" type="text" id="clAmount" name="clAmount" value="5"><br><br>
+        <label class="textInput desc" for="time">Clip duration:</label>
+        <input class="buttons textInput" type="text" id="time" name="time" value="1"><br><br>
+        <label for="prefetching">Prefetch clips (use 'Run' or click on preview to play)</label>
+        <input class="buttons" type="checkbox" id="prefetching" name="prefetching" checked>
+        <br>
+        <input class="buttons" type="radio" id="maxloops" name="timerType" value="loops" checked>
+        <label for="maxloops">Number of loops</label>
+        <input class="buttons" type="radio" id="maxtime" name="timerType" value="time">
+        <label for="maxloops">Loop time in seconds</label>
+        <br>Search by:<br>
+        <input class="buttons" type="radio" id="searchByQuote" name="searchType" value="quote" checked>
+        <label for="searchByQuote">Quote</label>
+        <input class="buttons" type="radio" id="searchByTitle" name="searchType" value="title">
+        <label for="searchByTitle">Title</label>
+        <br>Clip source:<br>
+        <input class="buttons" type="radio" id="allType" name="type" value="all" checked>
+        <label for="allType">All</label>
+        <input class="buttons" type="radio" id="moviesType" name="type" value="movies">
+        <label for="moviesType">Movies</label>
+        <input class="buttons" type="radio" id="musicType" name="type" value="music">
+        <label for="musicType">Music</label>
+        <input class="buttons" type="radio" id="tvType" name="type" value="tv">
+        <label for="tvType">TV</label>
+        <input class="buttons" type="radio" id="trailersType" name="type" value="trailers">
+        <label for="trailersType">Trailers</label>
+        <br>
+        <label for="zoomRange">Zoom: </label>
+        <div class="slide">
+            <input type="range" min="50" max="150" value="100" class="slider" id="zoomRange">
+        </div>
+        <br><br>
+        <input class="buttons buttonsHalf" type="submit" value="Toggle video stretch" formaction="/stretch">
+        <button class="buttons buttonsHalf" type="button" onclick="darkMode()">Toggle dark mode</button>
+        <br><br>
+        <input class="buttons buttonsQuarter" type="submit" value="One from random" formaction="/randomOne">
+        <input class="buttons buttonsQuarter" type="submit" value="One from Top 4" formaction="/topResult">
+        <input class="buttons buttonsQuarter" type="submit" value="Random" formaction="/randomClips">
+        <input class="buttons buttonsQuarter" type="submit" value="Loop" formaction="/loop">
+        <br><br>
+        <input class="buttons buttonsHalf" type="submit" value="Run" formaction="/run">
+        <input class="buttons buttonsHalf" type="submit" value="Stop" formaction="/stop">
+        <br><br>
+    </div>
     <div class="column">
         <div class="row">
             <input type="image" class="clipPreview" name="submit_clip_1" value="clip_1" id="preview_1" src=""
@@ -83,8 +89,8 @@
 
 <style>
     .clipPreview {
-        height: 26vw;
-        width: 46vw;
+        height: 24vw;
+        width: 49%;
     }
 
     .desc {
@@ -144,6 +150,10 @@
     }
 
     hideGifs();
+
+    $('#zoomRange').on('mouseup', function () {
+        $('#control').css('zoom', $('#zoomRange').val() + '%');
+    });
 
     socket.on('stop', function () {
         hideGifs();
